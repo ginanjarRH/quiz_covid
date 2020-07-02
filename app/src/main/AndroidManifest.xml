@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".kuis_hasil_skoring"></activity>
+        <activity android:name=".activity_mulaikuis"></activity>
+        <activity android:name=".kuis_hasil_skoring" />
         <activity android:name=".kuis_essay" />
         <activity android:name=".kuis_pilihan_ganda" />
         <activity android:name=".MainActivity">

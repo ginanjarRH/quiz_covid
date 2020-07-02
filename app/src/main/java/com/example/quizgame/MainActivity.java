@@ -1,52 +1,35 @@
 package com.example.quizgame;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
+
 
 public class MainActivity extends AppCompatActivity {
-    LinearLayout mlinePilGan, mLineEssay, mLineAgama;
+
+    private Button btnStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //menyambungkan variabel pada MainActivity.java dengan id pada activity_main
-        //pastikan tipe data variabel dengan view id sama
-        mlinePilGan = (LinearLayout) findViewById(R.id.linePilGan);
-        mLineEssay = (LinearLayout) findViewById(R.id.lineEssay);
-
-        //memberi aksi ketika diklik
-        mlinePilGan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //hasil aksinya ditulis disini (dalam method onClick)
-                //pada kali ini hasil yang diinginkan adalah pindah activity, maka
-
-                //membuat objek baru dari kelas intent,
-                //dari MainActivity akan pindah ke KuisPilihaGanda
-                Intent i = new Intent(MainActivity.this, kuis_pilihan_ganda.class);
-                startActivity(i); //jalankan Intent
-            }
-        });
-
-        mLineEssay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //hasil aksinya ditulis disini (dalam method onClick)
-                //pada kali ini hasil yang diinginkan adalah pindah activity, maka
-
-                //membuat objek baru dari kelas intent,
-                //dari MainActivity akan pindah ke KuisEssay
-                Intent i = new Intent(MainActivity.this, kuis_essay.class);
-                startActivity(i);
-            }
-        });
+        ViewPager pager = findViewById(R.id.ui_content);
+        tabAdapter tAdapter = new tabAdapter(getSupportFragmentManager());
+        tAdapter.addFragment(new fragment_kuis(), "Kuis");
+        tAdapter.addFragment(new fragment_skor(), "Skor");
+        tAdapter.addFragment(new fragment_setting(), "Setting");
+        pager.setAdapter(tAdapter);
+        TabLayout tab_layout = findViewById(R.id.tabs);
+        tab_layout.setupWithViewPager(pager);
     }
 
 }
