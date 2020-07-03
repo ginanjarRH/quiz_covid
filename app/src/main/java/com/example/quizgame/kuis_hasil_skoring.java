@@ -1,7 +1,13 @@
 package com.example.quizgame;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
@@ -9,10 +15,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Collections;
+
 public class kuis_hasil_skoring extends AppCompatActivity {
 
     TextView mtvHasilAkhir;
     Button mbtnMenu;
+    private static final String CHANNEL_ID = "personal_notification";
+    private final int NOTIFICATION_ID = 001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +50,31 @@ public class kuis_hasil_skoring extends AppCompatActivity {
         String skorPilGan = getIntent().getStringExtra("skorAkhir");
         String skorEssay = getIntent().getStringExtra("skorAkhir2");
 
+        createNotificationChannel();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(kuis_hasil_skoring.this, CHANNEL_ID);
+        builder.setDefaults(Notification.DEFAULT_VIBRATE);
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        builder.setSmallIcon(R.drawable.notification);
+
         if(activity.equals("PilihanGanda")){ //jika var activity bernilai PilihanGanda
             //dipastikan activity sebelumnya datang dari kelas KuisPilihanGanda
             //maka skornya diatur dari skorPilGan
             mtvHasilAkhir.setText("SKOR : "+skorPilGan);
+
+            builder.setContentTitle("SKOR PILIHAN GANDA");
+            builder.setContentText("" + skorPilGan);
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(kuis_hasil_skoring.this);
+            notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
+
         }else{
             //dipastikan activity sebelumnya datang dari kelas KuisEssay
             //maka skornya diatur dari skorEssay
             mtvHasilAkhir.setText("SKOR : "+skorEssay);
+
+            builder.setContentTitle("SKOR ESSAY");
+            builder.setContentText("" + skorEssay);
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(kuis_hasil_skoring.this);
+            notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
         }
     }
 
@@ -58,6 +85,21 @@ public class kuis_hasil_skoring extends AppCompatActivity {
         //jadi yang awalnya klik tombol back maka akan kembali ke activity sebelumnya
         //kali ini ketika tombol back diklik maka
         //hanya muncul Toast
+    }
+
+    private void createNotificationChannel() {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            CharSequence name = "Personal Notification";
+            String description = "Include all personal notification";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+
+            notificationChannel.setDescription(description);
+
+            NotificationManager notificationManager =(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannels(Collections.singletonList(notificationChannel));
+        }
     }
 
 }
